@@ -6,6 +6,8 @@ import 'package:mymcps_helper/AssignmentsPage.dart';
 import 'GradeUtils.dart';
 import 'LoginPage.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:flutter_colorpicker/block_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ClassesPage extends StatefulWidget{
   @override
@@ -51,7 +53,7 @@ class ClassesPageState extends State<StatefulWidget>{
     return Scaffold(
       appBar: AppBar(title: Text("Classes")),
       drawer: Drawer(
-        child: Column(
+        child: SafeArea(child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
@@ -60,10 +62,10 @@ class ClassesPageState extends State<StatefulWidget>{
                   new DrawerHeader(child:
                     Column(
                       children: <Widget>[
-                        Text('MyMCPS Helper', style: TextStyle(fontSize: 35, color: Colors.blue)),
-                        Text('By: Nikhil Mittu', style: TextStyle(fontSize: 20, color: Colors.blue),),
+                        Text('MyMCPS Helper', style: TextStyle(fontSize: 35, color: Theme.of(context).accentColor)),
+                        Text('By: Nikhil Mittu', style: TextStyle(fontSize: 20, color: Theme.of(context).accentColor),),
                         Container(height: 15,),
-                        Text("Not affiliated with MCPS or Powerschool", style: TextStyle(fontSize: 15, color: Colors.blue), textAlign: TextAlign.center,)
+                        Text("Not affiliated with MCPS or Powerschool", style: TextStyle(fontSize: 15, color: Theme.of(context).accentColor), textAlign: TextAlign.center,)
                       ],
                     )
                   ),
@@ -72,15 +74,44 @@ class ClassesPageState extends State<StatefulWidget>{
                     MyApp.Account.logout();
                     Navigator.pop(context);
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
-                    },)
+                    },),
+                  InkWell(child: ListTile(title: Text("Theme"),), onTap: (){
+                    showDialog(
+                        context: context,
+                        builder: (context){
+                          return AlertDialog(
+                              title: Text('Select a color'),
+                              content: SingleChildScrollView(
+                                child: BlockPicker(
+                                  pickerColor: Theme.of(context).primaryColor,
+                                  onColorChanged: (Color color) {
+                                    DynamicTheme.of(context).setThemeData(ThemeData(primaryColor: color, accentColor: color, brightness: Theme.of(context).brightness));
+                                    SharedPreferences.getInstance().then((SharedPreferences pref){
+                                      pref.setInt("ThemeColor", color.value);
+                                      pref.setBool("SameAccent", true);
+                                    });
+                                    MyApp.themeColor = color;
+                                  },
+                                ),
+                              )
+                          );
+                        }
+                    );
+                  },)
                 ],
               ),
             ),
             InkWell(child: ListTile(title: Text("Dark")), onTap: (){
+              if(Theme.of(context).brightness == Brightness.light) {
+                Theme.of(context).copyWith(accentColor: Colors.blue);
+                SharedPreferences.getInstance().then((pref){
+                  pref.setBool("SameAccent", false);
+                });
+              }
               DynamicTheme.of(context).setBrightness(Theme.of(context).brightness == Brightness.dark? Brightness.light: Brightness.dark);
-            },)
+            },),
           ],
-        ),
+        )),
       ),
       body: SafeArea(
           child: _isloading ? Center(child: CircularProgressIndicator()) : ListView.builder(itemCount: _classes.length,

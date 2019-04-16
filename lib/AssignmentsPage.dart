@@ -211,7 +211,9 @@ class AssignmentPageState extends State<StatefulWidget>{
         possibleMap = possibleMap.map((int i, TextField tf) => MapEntry(i+1, tf));
         CalculateGrade();
       }),
-      body: SafeArea(
+      body: GestureDetector(onTap: (){
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },child: SafeArea(
           child: _isloading ? Center(child: CircularProgressIndicator()) : Column(
             children: <Widget>[
               Card(child: Container(child: ListView.builder(
@@ -280,15 +282,15 @@ class AssignmentPageState extends State<StatefulWidget>{
                         Grades.removeAt(index);
                         possibleMap.remove(index);
                         pointsMap.remove(index);
-                        pointsMap = pointsMap.map((int i, TextField tf) => i>index ? MapEntry(i-1, tf) : MapEntry(i-1, tf));
-                        possibleMap = possibleMap.map((int i, TextField tf) => i>index ? MapEntry(i-1, tf) : MapEntry(i-1, tf));
+                        pointsMap = pointsMap.map((int i, TextField tf) => i>index ? MapEntry(i-1, tf) : MapEntry(i, tf));
+                        possibleMap = possibleMap.map((int i, TextField tf) => i>index ? MapEntry(i-1, tf) : MapEntry(i, tf));
                         CalculateGrade();
                       },)],
                   )
               ))
             ],
           )
-      ),
+      )),
     );
   }
 

@@ -30,6 +30,7 @@ class LoginPageState extends State<StatefulWidget>{
   @override
   Widget build(BuildContext context) {
     this.context=context;
+    MyApp.setColor(context);
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: Text("MyMCPS Helper")),
@@ -47,7 +48,7 @@ class LoginPageState extends State<StatefulWidget>{
               TextField(controller:passCont, autocorrect: false, obscureText: true ,decoration: InputDecoration(hintText: "Password"),),
 
               SizedBox(height: 10,),
-              RaisedButton(onPressed: Login,color: Colors.blue, textColor: Colors.white ,child: Text("Login"),),
+              RaisedButton(onPressed: Login,color: Theme.of(context).accentColor, textColor: Colors.white ,child: Text("Login"),),
 
               SizedBox(height: 10,),
               isloading ? CircularProgressIndicator() : Container()

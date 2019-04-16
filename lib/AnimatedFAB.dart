@@ -51,7 +51,7 @@ class AnimatedFABState extends State<StatefulWidget> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Transform.scale(scale: size.value, child: FloatingActionButton(backgroundColor: Colors.blue, foregroundColor: Colors.white, onPressed: (){onTap();},child: Transform.rotate(angle: angle.value, child: Icon(Icons.add),)));
+    return Transform.scale(scale: size.value, child: FloatingActionButton(onPressed: (){onTap();},child: Transform.rotate(angle: angle.value, child: Icon(Icons.add),)));
   }
 
 }
