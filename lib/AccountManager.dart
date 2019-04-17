@@ -202,6 +202,29 @@ class AccountManager{
   }
 
   Future setActiveAccount(String name) async {
-    //TO-DO
+    Map<String, String> form = new Map();
+    form["selected_student_id"] = accounts[name];
+    var resp;
+    try {
+      resp = await dio.post(LoginURL, data: form,
+          options: new Options(contentType: ContentType.parse(
+              "application/x-www-form-urlencoded")));
+    }on DioError catch(error) {
+      if (error.response.statusCode == 302) {
+        resp = await dio.get(error.response.headers.value("location"));
+      }
+    }
+    
+    {
+      String body = resp.data.toString();
+      
+      var pattern = new RegExp("\\s?root.studentNumber\\s?=\\s?parseInt\\(('|\")(\\d+)('|\")\\);");
+      var match = pattern.firstMatch(body);
+
+      if(match != null){
+        StudentId = match.group(2);
+      }
+    }
+    StudentNumber = accounts[name];
   }
 }

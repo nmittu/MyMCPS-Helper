@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'ClassesPage.dart';
-
+import 'StudentsPage.dart';
 
 class LoginPage extends StatefulWidget{
   @override
@@ -48,7 +48,7 @@ class LoginPageState extends State<StatefulWidget>{
               TextField(controller:passCont, autocorrect: false, obscureText: true ,decoration: InputDecoration(hintText: "Password"),),
 
               SizedBox(height: 10,),
-              RaisedButton(onPressed: Login,color: Theme.of(context).accentColor, textColor: Colors.white ,child: Text("Login"),),
+              RaisedButton(onPressed: isloading ? (){} : Login,color: Theme.of(context).accentColor, textColor: Colors.white ,child: Text("Login"),),
 
               SizedBox(height: 10,),
               isloading ? CircularProgressIndicator() : Container()
@@ -66,9 +66,11 @@ class LoginPageState extends State<StatefulWidget>{
         MyApp.Account.saveAccount(usernameCont.text, passCont.text);
         Navigator.pushReplacement(context, new MaterialPageRoute(builder: (context) => new ClassesPage()));
       });
-    }else if (val == "MultipleAccounts"){
+    }else if (val == "Multiple Accounts"){
       setState(() {
         isloading=false;
+        MyApp.Account.saveAccount(usernameCont.text, passCont.text);
+        Navigator.pushReplacement(context, new MaterialPageRoute(builder: (context) => new StudentsPage()));
       });
     }else {
       setState(() {

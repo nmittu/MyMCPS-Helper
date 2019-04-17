@@ -14,7 +14,6 @@ class GradeUtils{
     }else {
       return Colors.red;
     }
-    return Colors.red;
   }
 
   static double getGradePercent(String points, String possible){
@@ -25,6 +24,21 @@ class GradeUtils{
       return 100;
     }else{
       return p/pp*100;
+    }
+  }
+
+  static double getGradeGPA(String percent){
+    var per = double.tryParse(percent);
+    if(per >= 89.5){
+      return 4;
+    }else if (per >= 79.5){
+      return 3;
+    }else if (per >= 69.5){
+      return 2;
+    }else if (per >= 59.5){
+      return 1;
+    }else {
+      return 0;
     }
   }
 }

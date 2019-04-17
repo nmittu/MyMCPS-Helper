@@ -8,12 +8,24 @@ import 'LoginPage.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter_colorpicker/block_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:math';
 
 class ClassesPage extends StatefulWidget{
+  String name = null;
+
+  ClassesPage(){}
+
+  ClassesPage.withStudentName(String name){
+    this.name = name;
+  }
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new ClassesPageState();
+    if(name == null) {
+      return new ClassesPageState();
+    }else{
+      return new ClassesPageState.withStudentName(name);
+    }
   }
 
 }
@@ -21,9 +33,27 @@ class ClassesPage extends StatefulWidget{
 class ClassesPageState extends State<StatefulWidget>{
   var _isloading = true;
   List<dynamic> _classes;
+  String title;
 
   ClassesPageState(){
     MyApp.Account.loadClasses().then(classesCallback);
+    title = "Classes";
+  }
+
+  Future<List<dynamic>> loadWithName(String name) async{
+    await MyApp.Account.setActiveAccount(name);
+    return await MyApp.Account.loadClasses();
+  }
+
+  ClassesPageState.withStudentName(String name){
+    title = name;
+    loadWithName(name).then(classesCallback);
+  }
+
+  double calculateGPA(){
+    if(_classes == null)
+      return 0;
+    return _classes.map((dynamic c) => GradeUtils.getGradeGPA(c.percent)).reduce((a,b)=>a+b)/_classes.length;
   }
 
   Future<List> filterClasses(List<dynamic> classes) async {
@@ -51,7 +81,13 @@ class ClassesPageState extends State<StatefulWidget>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text("Classes")),
+      appBar: AppBar(title: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(title),
+          Text("GPA:" + calculateGPA().toStringAsFixed(2), style: TextStyle(fontSize: 10),)
+        ],
+      )),
       drawer: Drawer(
         child: SafeArea(child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,6 +111,10 @@ class ClassesPageState extends State<StatefulWidget>{
                     Navigator.pop(context);
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
                     },),
+                  (title == "Classes") ? Container() : InkWell(child: ListTile(title: Text("Switch student"),), onTap: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },),
                   InkWell(child: ListTile(title: Text("Theme"),), onTap: (){
                     showDialog(
                         context: context,
@@ -103,7 +143,7 @@ class ClassesPageState extends State<StatefulWidget>{
             ),
             InkWell(child: ListTile(title: Text("Dark")), onTap: (){
               if(Theme.of(context).brightness == Brightness.light) {
-                Theme.of(context).copyWith(accentColor: Colors.blue);
+                MyApp.themeColor = null;
                 SharedPreferences.getInstance().then((pref){
                   pref.setBool("SameAccent", false);
                 });
@@ -115,11 +155,11 @@ class ClassesPageState extends State<StatefulWidget>{
       ),
       body: SafeArea(
           child: _isloading ? Center(child: CircularProgressIndicator()) : ListView.builder(itemCount: _classes.length,
-              itemBuilder: (context, index) => InkWell(
-                onTap: (){
-                  Navigator.push(context, new CupertinoPageRoute(builder: (context) => new AssignmentsPage(_classes[index].sectionid, _classes[index].courseName)));
-                },
-                child: Padding( padding: EdgeInsets.fromLTRB(20, 8, 20, 8),
+              itemBuilder: (context, index) => Card(child: InkWell(
+                  onTap: (){
+                    Navigator.push(context, new CupertinoPageRoute(builder: (context) => new AssignmentsPage(_classes[index].sectionid, _classes[index].courseName)));
+                  },
+                  child: Padding( padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -131,7 +171,7 @@ class ClassesPageState extends State<StatefulWidget>{
                       )
                     ],
                   ),
-                ),
+                )),
               )
 
           )
