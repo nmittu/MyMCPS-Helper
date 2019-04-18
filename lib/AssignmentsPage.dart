@@ -9,6 +9,7 @@ import 'GradeUtils.dart';
 import 'AnimatedFAB.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'dart:io' show Platform;
+import 'dart:math';
 
 class AssignmentsPage extends StatefulWidget {
   String secid;
@@ -139,13 +140,17 @@ class AssignmentPageState extends State<StatefulWidget>{
     return new Tuple2(categories, grades);
   }
 
+
   Map<int, TextField> pointsMap = new Map();
   Map<int, TextField> possibleMap = new Map();
-  TextField getTextField(Map<int, TextField> map, int index, {String text, var Obj, Function onChange}){
+  TextField getTextField(Map<int, TextField> map, int index, {String text, var Obj, Function onChange, bool addDelta = true}){
     if(map.containsKey(index)){
-      return map[index];
+      //We want to keep everything the same except for the onChange function (we need the index var in the onChange to update).
+      return TextField(focusNode: map[index].focusNode, decoration: map[index].decoration, keyboardType: map[index].keyboardType, controller: map[index].controller, onChanged: onChange, keyboardAppearance: map[index].keyboardAppearance,);
     }
-    var ret = TextField(decoration: InputDecoration(contentPadding: EdgeInsets.all(5)), keyboardType: TextInputType.number, controller: TextEditingController(text: text) ,onChanged: onChange);
+
+
+    var ret = TextField(focusNode: FocusNode(), decoration: InputDecoration(contentPadding: EdgeInsets.all(5)), keyboardType: TextInputType.number, controller: TextEditingController(text: text) ,onChanged: onChange, keyboardAppearance: Theme.of(context).brightness);
 
     map[index] = ret;
     return ret;
@@ -185,8 +190,10 @@ class AssignmentPageState extends State<StatefulWidget>{
           );
         }
       ).then((var value){
-        Grades[index].AssignmentType = value;
-        CalculateGrade();
+        if(value != null) {
+          Grades[index].AssignmentType = value;
+          CalculateGrade();
+        }
       });
     }
   }
@@ -206,6 +213,7 @@ class AssignmentPageState extends State<StatefulWidget>{
         title: Text(className),
       ),
       floatingActionButton: AnimatedFAB(scrollController, (){
+        FocusScope.of(context).requestFocus(FocusNode());
         Grades.insert(0, Assignment(AssignmentType: CategoryNames[0], Description: "New Assignment", Points: "", Possible: "10.0"));
         pointsMap = pointsMap.map((int i, TextField tf) => MapEntry(i+1, tf));
         possibleMap = possibleMap.map((int i, TextField tf) => MapEntry(i+1, tf));
@@ -245,7 +253,7 @@ class AssignmentPageState extends State<StatefulWidget>{
                     child: Card(child: Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 5),child:Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Container(height: 30,child: Align(alignment: Alignment.centerLeft ,child: Text(Grades[index].Description, maxLines: 2,))),
+                        Padding(padding: EdgeInsets.fromLTRB(5, 5, 0, 0), child: Align(alignment: Alignment.centerLeft ,child: Text(Grades[index].Description, maxLines: 2,style: TextStyle(fontSize: 17),))),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -260,7 +268,7 @@ class AssignmentPageState extends State<StatefulWidget>{
                                 CalculateGrade();
                               }),),
                               Align(alignment: Alignment.centerLeft, child: Text("/")),
-                              Container(width: 40, child: getTextField(possibleMap, index, text: Grades[index].Possible, onChange: (String val){
+                              Container(width: 40, child: getTextField(possibleMap, index, text: Grades[index].Possible, addDelta: false, onChange: (String val){
                                 Grades[index].Possible = val;
                                 CalculateGrade();
                               }),),

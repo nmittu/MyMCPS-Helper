@@ -34,6 +34,7 @@ class ClassesPageState extends State<StatefulWidget>{
   var _isloading = true;
   List<dynamic> _classes;
   String title;
+  bool canPop = false;
 
   ClassesPageState(){
     MyApp.Account.loadClasses().then(classesCallback);
@@ -80,7 +81,10 @@ class ClassesPageState extends State<StatefulWidget>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
+    return WillPopScope(onWillPop: () async {
+      return canPop;
+    },
+    child: Scaffold(
       appBar: AppBar(title: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -105,17 +109,22 @@ class ClassesPageState extends State<StatefulWidget>{
                       ],
                     )
                   ),
-                  InkWell(child: ListTile(title: Text("Logout")), onTap: (){
+                  InkWell(child: ListTile(leading: Icon(Icons.arrow_back), title: Text("Logout")), onTap: (){
                     MyApp.Account.deleteAccount();
                     MyApp.Account.logout();
+                    canPop = true;
                     Navigator.pop(context);
+                    if(title != "Classes"){
+                      Navigator.pop(context);
+                    }
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
                     },),
-                  (title == "Classes") ? Container() : InkWell(child: ListTile(title: Text("Switch student"),), onTap: (){
+                  (title == "Classes") ? Container() : InkWell(child: ListTile(leading: Icon(Icons.person), title: Text("Switch student"),), onTap: (){
+                    canPop = true;
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },),
-                  InkWell(child: ListTile(title: Text("Theme"),), onTap: (){
+                  InkWell(child: ListTile(leading: Icon(Icons.style),title: Text("Theme"),), onTap: (){
                     showDialog(
                         context: context,
                         builder: (context){
@@ -141,7 +150,7 @@ class ClassesPageState extends State<StatefulWidget>{
                 ],
               ),
             ),
-            InkWell(child: ListTile(title: Text("Dark")), onTap: (){
+            InkWell(child: ListTile(leading: Icon(Icons.brightness_4),title: Text("Dark Mode")), onTap: (){
               if(Theme.of(context).brightness == Brightness.light) {
                 MyApp.themeColor = null;
                 SharedPreferences.getInstance().then((pref){
@@ -163,7 +172,13 @@ class ClassesPageState extends State<StatefulWidget>{
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(_classes[index].courseName, style: TextStyle(fontSize: 20),),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(_classes[index].courseName, style: TextStyle(fontSize: 20),),
+                          Text( _classes[index].teacher + " PD: " + _classes[index].period + " RM: " + _classes[index].room, overflow: TextOverflow.ellipsis,)
+                        ],
+                      ),
                       Container(
                         width: 100,
                         decoration: new BoxDecoration(color: GradeUtils.getGradeColor(_classes[index].percent), borderRadius: new BorderRadius.all(Radius.circular(8))),
@@ -175,7 +190,7 @@ class ClassesPageState extends State<StatefulWidget>{
               )
 
           )
-      ),
+      )),
     );
   }
 

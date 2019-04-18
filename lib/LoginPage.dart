@@ -14,8 +14,14 @@ class LoginPage extends StatefulWidget{
 class LoginPageState extends State<StatefulWidget>{
   final usernameCont = TextEditingController();
   final passCont = TextEditingController();
+  final  usernamefocus = FocusNode();
+  final  passfocus = FocusNode();
+  String username = null;
+  String password = null;
   BuildContext context;
   bool isloading = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _autovalidate = false;
 
   LoginPageState(){
     MyApp.Account.getAccount().then((var acc){
@@ -43,12 +49,58 @@ class LoginPageState extends State<StatefulWidget>{
               Text("Login", style: TextStyle(fontSize: 24),),
 
               SizedBox(height: 80,),
-              TextField(controller: usernameCont,autocorrect: false, decoration: InputDecoration(hintText: "Username"),),
-              SizedBox(height: 10,),
-              TextField(controller:passCont, autocorrect: false, obscureText: true ,decoration: InputDecoration(hintText: "Password"),),
+              Form(
+                autovalidate: _autovalidate,
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(focusNode: usernamefocus, controller: usernameCont, autocorrect: false, decoration: InputDecoration(hintText: "Username"),keyboardType: TextInputType.emailAddress, textInputAction: TextInputAction.next, keyboardAppearance: Theme.of(context).brightness,
+                      validator: (String val){
+                        Pattern pattern =
+                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                        RegExp regex = new RegExp(pattern);
+                        if(regex.hasMatch(val) || int.tryParse(val) != null){
+                          return null;
+                        }else{
+                          return "Enter valid student id or email";
+                        }
+                      },
+                      onSaved: (String val){
+                        username = val;
+                      },
+                      onFieldSubmitted: (val){
+                        usernamefocus.unfocus();
+                        FocusScope.of(context).requestFocus(passfocus);
+                        if(!_formKey.currentState.validate()) {
+                          setState(() {
+                            _autovalidate = true;
+                          });
+                        }
+                      }
+                    ,),
+                    SizedBox(height: 10,),
+                    TextFormField(focusNode: passfocus, controller: passCont, autocorrect: false, obscureText: true ,decoration: InputDecoration(hintText: "Password"), textInputAction: TextInputAction.done, keyboardAppearance: Theme.of(context).brightness,
+                      validator: (String val){
+                        if (val.length==0 && !passfocus.hasFocus){
+                          return "Enter a password";
+                        }else{
+                          return null;
+                        }
+                      },
+                      onSaved: (String val){
+                        password = val;
+                      },
+                      onFieldSubmitted: (val){
+                        passfocus.unfocus();
+                        Login();
+                      }
+                    ),
 
-              SizedBox(height: 10,),
-              RaisedButton(onPressed: isloading ? (){} : Login,color: Theme.of(context).accentColor, textColor: Colors.white ,child: Text("Login"),),
+                    SizedBox(height: 10,),
+                    RaisedButton(onPressed: isloading ? (){} : Login,color: Theme.of(context).accentColor, textColor: Colors.white ,child: Text("Login"),),
+                  ],
+                ),
+              ),
 
               SizedBox(height: 10,),
               isloading ? CircularProgressIndicator() : Container()
@@ -97,12 +149,14 @@ class LoginPageState extends State<StatefulWidget>{
   }
 
   void Login(){
-    setState(() {
-      isloading=true;
-    });
-    MyApp.Account.Login(usernameCont.text, passCont.text).then(LoginCallback);
-
-
+    if(_formKey.currentState.validate()) {
+      setState(() {
+        isloading = true;
+      });
+      MyApp.Account.Login(usernameCont.text, passCont.text).then(LoginCallback);
+    }else{
+      _autovalidate = true;
+    }
   }
 
 }

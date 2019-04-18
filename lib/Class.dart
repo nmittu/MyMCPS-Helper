@@ -5,6 +5,8 @@ class Class{
   String sectionid;
   String termid;
   String percent;
+  String teacher;
+  String room;
 
   Class({
     this.courseName,
@@ -12,7 +14,9 @@ class Class{
     this.period,
     this.sectionid,
     this.termid,
-    this.percent
+    this.percent,
+    this.teacher,
+    this.room
   });
 
   factory Class.fromJson(Map<dynamic, dynamic> parsedJson){
@@ -22,7 +26,9 @@ class Class{
         period : parsedJson ['period'],
         sectionid : parsedJson ['sectionid'],
         termid : parsedJson ['termid'],
-        percent :parsedJson ['percent']
+        percent :parsedJson ['percent'],
+        teacher :parsedJson ['teacher'],
+        room :parsedJson ['room']
     );
   }
 }
