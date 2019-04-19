@@ -55,9 +55,7 @@ class AssignmentPageState extends AppStateHandler{
     super.initState();
     KeyboardVisibilityNotification().addNewListener(
       onChange: (bool visible) {
-        setState(() {
-          paddingNeeded = !visible;
-        });
+        paddingNeeded = !visible;
       },
     );
   }
@@ -143,15 +141,19 @@ class AssignmentPageState extends AppStateHandler{
       cat_names.add(cat.Description);
     }
 
-    CategoryNames = cat_names;
-
     for(int i = 0; i < grades.length; i++){
       var g = grades[i];
       if(g == null || g.Description == null){
         grades.removeAt(i);
         i--;
+        continue;
+      }
+      if(!cat_names.contains(g.AssignmentType)){
+        cat_names.add(g.AssignmentType);
       }
     }
+
+    CategoryNames = cat_names;
 
     return new Tuple2(categories, grades);
   }
@@ -274,10 +276,16 @@ class AssignmentPageState extends AppStateHandler{
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Expanded(child: Padding(padding: EdgeInsets.all(5), child: Container(child: TextField(enableInteractiveSelection: false, focusNode: AlwaysDisabledFocusNode(), decoration: InputDecoration(contentPadding: EdgeInsets.all(5)), keyboardType: TextInputType.number, controller: TextEditingController(text: Grades[index].AssignmentType),onTap: (){
-                              //FocusScope.of(context).requestFocus(new FocusNode());
-                              showPicker(context, index);
-                            },),))),
+                            Expanded(child: Padding(padding: EdgeInsets.all(5), child: DropdownButton(
+                                isExpanded: true,
+                                value: Grades[index].AssignmentType,
+                                items: CategoryNames.map((cat) => DropdownMenuItem(value: cat,child: Text(cat, maxLines: 1,softWrap: false,))).toList(),
+                                onChanged: (value){
+                                  if(value != null) {
+                                    Grades[index].AssignmentType = value;
+                                    CalculateGrade();
+                                  }
+                                }))),
                             Padding(padding: EdgeInsets.all(5), child: Container(child: Row(children: <Widget>[
                               Container(width: 40, child: getTextField(pointsMap, index, text: getPointsFormatted(Grades[index]), onChange: (String val){
                                 Grades[index].Grade = "";
