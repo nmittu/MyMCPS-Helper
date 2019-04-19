@@ -10,6 +10,7 @@ import 'AnimatedFAB.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'dart:io' show Platform;
 import 'dart:math';
+import 'AppStateHandler.dart';
 
 class AssignmentsPage extends StatefulWidget {
   String secid;
@@ -28,7 +29,7 @@ class AssignmentsPage extends StatefulWidget {
 
 }
 
-class AssignmentPageState extends State<StatefulWidget>{
+class AssignmentPageState extends AppStateHandler{
   List<dynamic> Categories;
   List<dynamic> Grades;
   List<dynamic> CategoryNames;
@@ -207,6 +208,7 @@ class AssignmentPageState extends State<StatefulWidget>{
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(

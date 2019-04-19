@@ -12,6 +12,9 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="MyMCPS Helper"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5192562049043590~6832707449"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

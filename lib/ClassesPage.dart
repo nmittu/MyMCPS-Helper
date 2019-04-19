@@ -9,6 +9,8 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter_colorpicker/block_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
+import 'AppStateHandler.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 class ClassesPage extends StatefulWidget{
   String name = null;
@@ -30,7 +32,7 @@ class ClassesPage extends StatefulWidget{
 
 }
 
-class ClassesPageState extends State<StatefulWidget>{
+class ClassesPageState extends AppStateHandler{
   var _isloading = true;
   List<dynamic> _classes;
   String title;
@@ -39,6 +41,10 @@ class ClassesPageState extends State<StatefulWidget>{
   ClassesPageState(){
     MyApp.Account.loadClasses().then(classesCallback);
     title = "Classes";
+  }
+
+  initState(){
+    super.initState();
   }
 
   Future<List<dynamic>> loadWithName(String name) async{
@@ -80,6 +86,7 @@ class ClassesPageState extends State<StatefulWidget>{
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     // TODO: implement build
     return WillPopScope(onWillPop: () async {
       return canPop;
@@ -189,8 +196,8 @@ class ClassesPageState extends State<StatefulWidget>{
                 )),
               )
 
-          )
-      )),
+          ))
+      ),
     );
   }
 

@@ -3,9 +3,17 @@ import 'LoginPage.dart';
 import 'AccountManager.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import 'admobIds.dart';
+import 'package:flutter/services.dart';
 
 
-void main() => runApp(MyApp());
+void main(){
+  FirebaseAdMob.instance.initialize(appId: admobIds.appId);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((val){
+    runApp(MyApp());
+  });
+}
 
 class MyApp extends StatelessWidget {
   static Color themeColor = null;
@@ -34,6 +42,22 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: theme,
           home: LoginPage(),
+          builder: (context, widget){
+            var mediaQuery = MediaQuery.of(context);
+            double paddingBottom = 50.0;
+            double paddingRight = 0.0;
+            if (mediaQuery.orientation == Orientation.landscape){
+              paddingBottom = 0.0;
+              paddingRight = 50.0;
+            }
+
+            return new Column(
+                children: [
+                  Expanded(child: widget),
+                  Container(height: paddingBottom, color: theme.scaffoldBackgroundColor,)
+                ]
+            );
+          },
         );
       },
     );

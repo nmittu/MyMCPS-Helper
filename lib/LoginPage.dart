@@ -2,12 +2,22 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'ClassesPage.dart';
 import 'StudentsPage.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import 'admobIds.dart';
 
 class LoginPage extends StatefulWidget{
+  bool pop = false;
+
+  LoginPage(){}
+
+  LoginPage.fromPop({
+    this.pop
+  });
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new LoginPageState();
+    return new LoginPageState.fromPop(pop: pop);
   }
 }
 
@@ -22,6 +32,8 @@ class LoginPageState extends State<StatefulWidget>{
   bool isloading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
+  bool pop = false;
+  BannerAd banner = BannerAd(adUnitId: BannerAd.testAdUnitId, size: AdSize.smartBanner);
 
   LoginPageState(){
     MyApp.Account.getAccount().then((var acc){
@@ -33,13 +45,35 @@ class LoginPageState extends State<StatefulWidget>{
     });
   }
 
+  LoginPageState.fromPop({bool pop}){
+    this.pop = pop;
+
+    MyApp.Account.getAccount().then((var acc){
+      usernameCont.text = acc[0];
+      passCont.text = acc[1];
+      if(acc[0] != "" && acc[1] != "" && acc[0] != null && acc[1] != null) {
+        Login();
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    banner
+        ..load()
+        ..show();
+  }
+
   @override
   Widget build(BuildContext context) {
     this.context=context;
     MyApp.setColor(context);
     // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(title: Text("MyMCPS Helper")),
+    return WillPopScope(onWillPop: () async => false,
+    child: Scaffold(
+      appBar: AppBar(title: Text("MyMCPS Helper"), automaticallyImplyLeading: false,),
       body: SafeArea(
         child:Padding(
           padding: EdgeInsets.all(16),
@@ -108,7 +142,7 @@ class LoginPageState extends State<StatefulWidget>{
           ),
         ),
       ),
-    );
+    ));
   }
 
   void LoginCallback(var val){
@@ -116,13 +150,21 @@ class LoginPageState extends State<StatefulWidget>{
       setState(() {
         isloading=false;
         MyApp.Account.saveAccount(usernameCont.text, passCont.text);
-        Navigator.pushReplacement(context, new MaterialPageRoute(builder: (context) => new ClassesPage()));
+        if(pop){
+          Navigator.pop(context);
+        }else {
+          Navigator.pushReplacement(context,
+              new MaterialPageRoute(builder: (context) => new ClassesPage()));
+        }
       });
     }else if (val == "Multiple Accounts"){
       setState(() {
         isloading=false;
         MyApp.Account.saveAccount(usernameCont.text, passCont.text);
-        Navigator.pushReplacement(context, new MaterialPageRoute(builder: (context) => new StudentsPage()));
+        if(pop)
+          Navigator.pop(context);
+        else
+          Navigator.pushReplacement(context, new MaterialPageRoute(builder: (context) => new StudentsPage()));
       });
     }else {
       setState(() {
