@@ -56,7 +56,7 @@ class AnimatedFABState extends State<StatefulWidget> with SingleTickerProviderSt
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Transform.scale(scale: size.value, child: FloatingActionButton(onPressed: (){onTap();},child: Transform.rotate(angle: angle.value, child: Icon(Icons.add),))),
-        SizedBox(height: MyApp.safePaddingBottom)
+        SizedBox(height: 50.0+MyApp.safePaddingBottom)
       ]
     );
   }

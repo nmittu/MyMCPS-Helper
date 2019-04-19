@@ -33,7 +33,7 @@ class LoginPageState extends State<StatefulWidget>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
   bool pop = false;
-  BannerAd banner = BannerAd(adUnitId: admobIds.flutterSingleUnitId, size: AdSize.smartBanner);
+  BannerAd banner = BannerAd(adUnitId: admobIds.flutterSingleUnitId, size: AdSize.banner);
 
   LoginPageState(){
     MyApp.Account.getAccount().then((var acc){
@@ -74,7 +74,7 @@ class LoginPageState extends State<StatefulWidget>{
     return WillPopScope(onWillPop: () async => false,
     child: Scaffold(
       appBar: AppBar(title: Text("MyMCPS Helper"), automaticallyImplyLeading: false,),
-      body: SafeArea(
+      body: Padding(padding: EdgeInsets.only(bottom: 50), child: SafeArea(
         child:Padding(
           padding: EdgeInsets.all(16),
           child: Column(
@@ -142,7 +142,7 @@ class LoginPageState extends State<StatefulWidget>{
           ),
         ),
       ),
-    ));
+    )));
   }
 
   void LoginCallback(var val){

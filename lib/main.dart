@@ -49,20 +49,21 @@ class MyApp extends StatelessWidget {
           home: LoginPage(),
           builder: (context, widget){
             var mediaQuery = MediaQuery.of(context);
-            double paddingBottom = 50.0;
-            double paddingRight = 0.0;
+            //double paddingBottom = 50.0;
+            //ouble paddingRight = 0.0;
             safePaddingBottom = mediaQuery.padding.bottom;
-            if (mediaQuery.orientation == Orientation.landscape){
-              paddingBottom = 0.0;
-              paddingRight = 50.0;
-            }
+            //if (mediaQuery.orientation == Orientation.landscape){
+            //  paddingBottom = 0.0;
+            //  paddingRight = 50.0;
+            //}
 
-            return new Column(
-                children: [
-                  Expanded(child: widget),
-                  Container(height: paddingBottom, color: theme.scaffoldBackgroundColor,)
-                ]
-            );
+            //return new Column(
+            //    children: [
+            //      Expanded(child: widget),
+            //      Container(height: paddingBottom, color: theme.scaffoldBackgroundColor,)
+            //    ]
+            //);
+            return widget;
           },
           navigatorObservers: [
             FirebaseAnalyticsObserver(analytics: analytics)

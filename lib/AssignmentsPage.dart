@@ -11,6 +11,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'dart:io' show Platform;
 import 'dart:math';
 import 'AppStateHandler.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class AssignmentsPage extends StatefulWidget {
   String secid;
@@ -37,6 +38,7 @@ class AssignmentPageState extends AppStateHandler{
   String className;
   bool _isloading = true;
   bool fabVisible = true;
+  bool paddingNeeded = true;
 
   AssignmentPageState(String secid, String className){
     this.className = className;
@@ -45,6 +47,19 @@ class AssignmentPageState extends AppStateHandler{
       Grades = data.item2;
       CalculateGrade();
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    KeyboardVisibilityNotification().addNewListener(
+      onChange: (bool visible) {
+        setState(() {
+          paddingNeeded = !visible;
+        });
+      },
+    );
   }
 
   void CalculateGrade(){
@@ -223,8 +238,8 @@ class AssignmentPageState extends AppStateHandler{
       }),
       body: GestureDetector(onTap: (){
         FocusScope.of(context).requestFocus(new FocusNode());
-      },child: SafeArea(
-          child: _isloading ? Center(child: CircularProgressIndicator()) : Column(
+      },child: SafeArea(child: Padding(padding: EdgeInsets.only(bottom: paddingNeeded ? 50 : 0), child:
+          _isloading ? Center(child: CircularProgressIndicator()) : Column(
             children: <Widget>[
               Card(child: Container(child: ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -300,7 +315,7 @@ class AssignmentPageState extends AppStateHandler{
               ))
             ],
           )
-      )),
+      )),)
     );
   }
 

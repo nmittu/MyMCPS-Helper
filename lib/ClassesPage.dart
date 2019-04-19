@@ -100,7 +100,7 @@ class ClassesPageState extends AppStateHandler{
         ],
       )),
       drawer: Drawer(
-        child: SafeArea(child: Column(
+        child: SafeArea(child: Padding(padding: EdgeInsets.only(bottom: 55), child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
@@ -168,7 +168,7 @@ class ClassesPageState extends AppStateHandler{
             },),
           ],
         )),
-      ),
+      )),
       body: SafeArea(
           child: _isloading ? Center(child: CircularProgressIndicator()) : ListView.builder(itemCount: _classes.length,
               itemBuilder: (context, index) => Card(child: InkWell(
