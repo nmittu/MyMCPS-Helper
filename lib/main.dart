@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'admobIds.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 
 
 void main(){
@@ -31,6 +33,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
     return DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => new ThemeData(
@@ -60,6 +64,9 @@ class MyApp extends StatelessWidget {
                 ]
             );
           },
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: analytics)
+          ],
         );
       },
     );

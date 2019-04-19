@@ -74,3 +74,4 @@
 **/android/key.properties
 admobIds.dart
 GoogleService-Info.plist
+google-services.json

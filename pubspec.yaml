@@ -11,7 +11,7 @@ description: MyMCPS Helper
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 3.0.01+19
+version: 3.0.0+20
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -30,6 +30,7 @@ dependencies:
   flutter_colorpicker: any
   shared_preferences: ^0.5.0
   firebase_admob: ^0.8.0+4
+  firebase_analytics: ^2.1.1+3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
