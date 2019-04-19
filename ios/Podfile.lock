@@ -66,7 +66,7 @@ PODS:
 
 DEPENDENCIES:
   - firebase_admob (from `.symlinks/plugins/firebase_admob/ios`)
-  - Flutter (from `.symlinks/flutter/ios-release`)
+  - Flutter (from `.symlinks/flutter/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
 
@@ -85,7 +85,7 @@ EXTERNAL SOURCES:
   firebase_admob:
     :path: ".symlinks/plugins/firebase_admob/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios-release"
+    :path: ".symlinks/flutter/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   shared_preferences:

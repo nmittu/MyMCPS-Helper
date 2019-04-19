@@ -31,9 +31,8 @@ abstract class AppStateHandler extends State<StatefulWidget> with WidgetsBinding
         _timeOfClose = DateTime.now();
         break;
       case AppLifecycleState.resumed:
-        if(DateTime.now().difference(_timeOfClose).inMilliseconds>10){
+        if(DateTime.now().difference(_timeOfClose).inMinutes>10){
           MyApp.Account.logout();
-          banner.dispose();
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage.fromPop(pop: true,)));
         }
         break;
