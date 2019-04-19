@@ -179,13 +179,13 @@ class ClassesPageState extends AppStateHandler{
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Column(
+                      Expanded(child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(_classes[index].courseName, style: TextStyle(fontSize: 20),),
                           Text( _classes[index].teacher + " PD: " + _classes[index].period + " RM: " + _classes[index].room, overflow: TextOverflow.ellipsis,)
                         ],
-                      ),
+                      )),
                       Container(
                         width: 100,
                         decoration: new BoxDecoration(color: GradeUtils.getGradeColor(_classes[index].percent), borderRadius: new BorderRadius.all(Radius.circular(8))),

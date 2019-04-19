@@ -33,7 +33,7 @@ class LoginPageState extends State<StatefulWidget>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
   bool pop = false;
-  BannerAd banner = BannerAd(adUnitId: BannerAd.testAdUnitId, size: AdSize.smartBanner);
+  BannerAd banner = BannerAd(adUnitId: admobIds.flutterSingleUnitId, size: AdSize.smartBanner);
 
   LoginPageState(){
     MyApp.Account.getAccount().then((var acc){

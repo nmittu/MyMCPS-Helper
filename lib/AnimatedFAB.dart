@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'main.dart';
 
 class AnimatedFAB extends StatefulWidget{
   ScrollController scrollController;
@@ -51,7 +52,13 @@ class AnimatedFABState extends State<StatefulWidget> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Transform.scale(scale: size.value, child: FloatingActionButton(onPressed: (){onTap();},child: Transform.rotate(angle: angle.value, child: Icon(Icons.add),)));
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Transform.scale(scale: size.value, child: FloatingActionButton(onPressed: (){onTap();},child: Transform.rotate(angle: angle.value, child: Icon(Icons.add),))),
+        SizedBox(height: MyApp.safePaddingBottom)
+      ]
+    );
   }
 
 }

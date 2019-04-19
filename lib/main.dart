@@ -18,6 +18,7 @@ void main(){
 class MyApp extends StatelessWidget {
   static Color themeColor = null;
   static var Account = new AccountManager();
+  static double safePaddingBottom;
   // This widget is the root of your application.
   static setColor(BuildContext context){
     SharedPreferences.getInstance().then((SharedPreferences pref){
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
             var mediaQuery = MediaQuery.of(context);
             double paddingBottom = 50.0;
             double paddingRight = 0.0;
+            safePaddingBottom = mediaQuery.padding.bottom;
             if (mediaQuery.orientation == Orientation.landscape){
               paddingBottom = 0.0;
               paddingRight = 50.0;
