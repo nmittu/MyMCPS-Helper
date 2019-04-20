@@ -74,19 +74,21 @@ class LoginPageState extends State<StatefulWidget>{
     return WillPopScope(onWillPop: () async => false,
     child: Scaffold(
       appBar: AppBar(title: Text("MyMCPS Helper"), automaticallyImplyLeading: false,),
-      body: Padding(padding: EdgeInsets.only(bottom: 50), child: SafeArea(
+      body: SafeArea(
         child:Padding(
           padding: EdgeInsets.all(16),
           child: Column(
             children: <Widget>[
-              SizedBox(height: 50,),
+              SizedBox(height: 45,),
               Text("Login", style: TextStyle(fontSize: 24),),
 
-              SizedBox(height: 80,),
+              SizedBox(height: 50,),
               Form(
                 autovalidate: _autovalidate,
                 key: _formKey,
-                child: Column(
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   children: <Widget>[
                     TextFormField(focusNode: usernamefocus, controller: usernameCont, autocorrect: false, decoration: InputDecoration(hintText: "Username"),keyboardType: TextInputType.emailAddress, textInputAction: TextInputAction.next, keyboardAppearance: Theme.of(context).brightness,
                       validator: (String val){
@@ -142,7 +144,7 @@ class LoginPageState extends State<StatefulWidget>{
           ),
         ),
       ),
-    )));
+    ));
   }
 
   void LoginCallback(var val){
@@ -191,6 +193,7 @@ class LoginPageState extends State<StatefulWidget>{
   }
 
   void Login(){
+    FocusScope.of(context).requestFocus(FocusNode());
     if(_formKey.currentState.validate()) {
       setState(() {
         isloading = true;
