@@ -11,7 +11,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'dart:io' show Platform;
 import 'dart:math';
 import 'AppStateHandler.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class AssignmentsPage extends StatefulWidget {
   String secid;
@@ -53,11 +52,6 @@ class AssignmentPageState extends AppStateHandler{
   void initState() {
     // TODO: implement initState
     super.initState();
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        paddingNeeded = !visible;
-      },
-    );
   }
 
   void CalculateGrade(){
@@ -168,7 +162,7 @@ class AssignmentPageState extends AppStateHandler{
     }
 
 
-    var ret = TextField(focusNode: FocusNode(), decoration: InputDecoration(contentPadding: EdgeInsets.all(5)), keyboardType: TextInputType.number, controller: TextEditingController(text: text) ,onChanged: onChange, keyboardAppearance: Theme.of(context).brightness);
+    var ret = TextField(focusNode: FocusNode(), decoration: InputDecoration(contentPadding: EdgeInsets.all(5)), keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true), controller: TextEditingController(text: text) ,onChanged: onChange, keyboardAppearance: Theme.of(context).brightness);
 
     map[index] = ret;
     return ret;
@@ -226,6 +220,7 @@ class AssignmentPageState extends AppStateHandler{
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    paddingNeeded = MediaQuery.of(context).viewInsets.bottom == 0;
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
