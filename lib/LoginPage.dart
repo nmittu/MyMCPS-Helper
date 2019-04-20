@@ -79,10 +79,10 @@ class LoginPageState extends State<StatefulWidget>{
           padding: EdgeInsets.all(16),
           child: Column(
             children: <Widget>[
-              SizedBox(height: 45,),
+              SizedBox(height: 30,),
               Text("Login", style: TextStyle(fontSize: 24),),
 
-              SizedBox(height: 50,),
+              SizedBox(height: 30,),
               Form(
                 autovalidate: _autovalidate,
                 key: _formKey,
