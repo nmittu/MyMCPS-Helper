@@ -88,7 +88,7 @@ class LoginPageState extends State<StatefulWidget>{
                 key: _formKey,
                 child: ListView(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  //physics: NeverScrollableScrollPhysics(),
                   children: <Widget>[
                     TextFormField(focusNode: usernamefocus, controller: usernameCont, autocorrect: false, decoration: InputDecoration(hintText: "Username"),keyboardType: TextInputType.emailAddress, textInputAction: TextInputAction.next, keyboardAppearance: Theme.of(context).brightness,
                       validator: (String val){
