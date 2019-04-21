@@ -169,7 +169,7 @@ class ClassesPageState extends AppStateHandler{
           ],
         )),
       )),
-      body: SafeArea(
+      body: SafeArea(child: Padding(padding: EdgeInsets.only(bottom: 50),
           child: _isloading ? Center(child: CircularProgressIndicator()) : ListView.builder(itemCount: _classes.length,
               itemBuilder: (context, index) => Card(child: InkWell(
                   onTap: (){
@@ -196,7 +196,7 @@ class ClassesPageState extends AppStateHandler{
                 )),
               )
 
-          ))
+          )))
       ),
     );
   }
