@@ -8,6 +8,7 @@ import 'admobIds.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:package_info/package_info.dart';
 
 
 void main(){
@@ -21,6 +22,8 @@ class MyApp extends StatelessWidget {
   static Color themeColor = null;
   static var Account = new AccountManager();
   static double safePaddingBottom;
+  static String version;
+  static String buildNumber;
   // This widget is the root of your application.
   static setColor(BuildContext context){
     SharedPreferences.getInstance().then((SharedPreferences pref){
@@ -50,6 +53,10 @@ class MyApp extends StatelessWidget {
           home: LoginPage(),
           builder: (context, widget){
             var mediaQuery = MediaQuery.of(context);
+            PackageInfo.fromPlatform().then((PackageInfo packageInfo){
+              version = packageInfo.version;
+              buildNumber = packageInfo.buildNumber;
+            });
             //double paddingBottom = 50.0;
             //ouble paddingRight = 0.0;
             safePaddingBottom = mediaQuery.padding.bottom;

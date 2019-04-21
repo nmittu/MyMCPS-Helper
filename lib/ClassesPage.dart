@@ -112,7 +112,8 @@ class ClassesPageState extends AppStateHandler{
                         Text('MyMCPS Helper', style: TextStyle(fontSize: 35, color: Theme.of(context).accentColor)),
                         Text('By: Nikhil Mittu', style: TextStyle(fontSize: 20, color: Theme.of(context).accentColor),),
                         Container(height: 15,),
-                        Text("Not affiliated with MCPS or Powerschool", style: TextStyle(fontSize: 15, color: Theme.of(context).accentColor), textAlign: TextAlign.center,)
+                        Text("Not affiliated with MCPS or Powerschool", style: TextStyle(fontSize: 15, color: Theme.of(context).accentColor), textAlign: TextAlign.center,),
+                        Text("v" + MyApp.version + " b"+ MyApp.buildNumber, style: TextStyle(fontSize: 12, color: Theme.of(context).accentColor), textAlign: TextAlign.center)
                       ],
                     )
                   ),
