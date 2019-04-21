@@ -167,9 +167,9 @@ class AssignmentPageState extends AppStateHandler{
     map[index] = ret;
     return ret;
   }
-  
+
   ScrollController scrollController = ScrollController();
-  
+
   void showPicker(BuildContext context, int index){
     if(Platform.isIOS){
       showCupertinoModalPopup(context: context, builder: (context) => Container(
@@ -246,8 +246,8 @@ class AssignmentPageState extends AppStateHandler{
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          index < Categories.length ? Text(Categories[index].Description, style: TextStyle(fontSize: 15)) : Container(),
-                          index < Categories.length ? Text(Categories[index].PointsEarned.toString() + "/" + Categories[index].PointsPossible.toString() + " (" + ((double.parse(Categories[index].PointsPossible) == 0) ? "100" : (100*double.parse(Categories[index].PointsEarned)/double.parse(Categories[index].PointsPossible)).toStringAsFixed(1)) + "%)", style: TextStyle(fontSize: 15),) : Container(
+                          index < Categories.length ? Flexible(child: Text(Categories[index].Description, style: TextStyle(fontSize: 15), maxLines: 1, softWrap: false)) : Container(),
+                          index < Categories.length ? Text(Categories[index].PointsEarned.toString() + "/" + Categories[index].PointsPossible.toString() + " (" + ((double.parse(Categories[index].PointsPossible) == 0) ? "100" : (100*double.parse(Categories[index].PointsEarned)/double.parse(Categories[index].PointsPossible)).toStringAsFixed(1)) + "%)", style: TextStyle(fontSize: 15),maxLines:1, textAlign: TextAlign.right) : Container(
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                             child: Container(
                               width: 100,
