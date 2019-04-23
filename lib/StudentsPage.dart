@@ -8,6 +8,7 @@ class StudentsPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    MyApp.analytics.setCurrentScreen(screenName: "Students Page", screenClassOverride: "StudentsPage");
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: Text("Students"),),

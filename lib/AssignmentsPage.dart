@@ -29,7 +29,7 @@ class AssignmentsPage extends StatefulWidget {
 
 }
 
-class AssignmentPageState extends AppStateHandler{
+class AssignmentPageState extends AppStateHandler with RouteAware{
   List<dynamic> Categories;
   List<dynamic> Grades;
   List<dynamic> CategoryNames;
@@ -52,6 +52,7 @@ class AssignmentPageState extends AppStateHandler{
   void initState() {
     // TODO: implement initState
     super.initState();
+    //MyApp.analytics.setCurrentScreen(screenName: "Assignmens Page", screenClassOverride: "AssignmentsPage");
   }
 
   void CalculateGrade(){
@@ -219,7 +220,7 @@ class AssignmentPageState extends AppStateHandler{
 
   @override
   Widget build(BuildContext context) {
-    this.context = context;
+    //this.context = context;
     paddingNeeded = MediaQuery.of(context).viewInsets.bottom == 0;
     // TODO: implement build
     return Scaffold(
@@ -320,6 +321,27 @@ class AssignmentPageState extends AppStateHandler{
           )
       )),)
     );
+  }
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyApp.observer.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    MyApp.observer.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPush() {
+    MyApp.analytics.setCurrentScreen(screenName: "Assignmens Page", screenClassOverride: "AssignmentsPage");
+  }
+
+  @override
+  void didPopNext() {
+    MyApp.analytics.setCurrentScreen(screenName: "Assignmens Page", screenClassOverride: "AssignmentsPage");
   }
 
 }

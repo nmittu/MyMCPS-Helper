@@ -24,6 +24,8 @@ class MyApp extends StatelessWidget {
   static double safePaddingBottom;
   static String version;
   static String buildNumber;
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
   // This widget is the root of your application.
   static setColor(BuildContext context){
     SharedPreferences.getInstance().then((SharedPreferences pref){
@@ -36,8 +38,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAnalytics analytics = FirebaseAnalytics();
-
     return DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => new ThemeData(
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       themedWidgetBuilder: (context, theme){
         return MaterialApp(
           //debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
+          title: 'MyMCPS Helper',
           theme: theme,
           home: LoginPage(),
           builder: (context, widget){
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
             return widget;
           },
           navigatorObservers: [
-            FirebaseAnalyticsObserver(analytics: analytics)
+            observer
           ],
         );
       },

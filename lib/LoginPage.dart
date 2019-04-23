@@ -21,14 +21,14 @@ class LoginPage extends StatefulWidget{
   }
 }
 
-class LoginPageState extends State<StatefulWidget>{
+class LoginPageState extends State<StatefulWidget> with RouteAware{
   final usernameCont = TextEditingController();
   final passCont = TextEditingController();
   final  usernamefocus = FocusNode();
   final  passfocus = FocusNode();
   String username = null;
   String password = null;
-  BuildContext context;
+  //BuildContext context;
   bool isloading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
@@ -64,12 +64,14 @@ class LoginPageState extends State<StatefulWidget>{
     banner
         ..load()
         ..show();
+    //MyApp.analytics.setCurrentScreen(screenName: "Login Page", screenClassOverride: "LoginPage");
   }
 
   @override
   Widget build(BuildContext context) {
-    this.context=context;
+    //this.context=context;
     MyApp.setColor(context);
+    MyApp.analytics.setUserProperty(name: "DarkMode", value: (Theme.of(context).brightness==Brightness.dark).toString());
     // TODO: implement build
     return WillPopScope(onWillPop: () async => false,
     child: Scaffold(
@@ -149,6 +151,8 @@ class LoginPageState extends State<StatefulWidget>{
 
   void LoginCallback(var val){
     if(val == "true"){
+      MyApp.analytics.logLogin(loginMethod: "StudentID");
+      MyApp.analytics.setUserProperty(name: "AccountType", value: "StudentID");
       setState(() {
         isloading=false;
         MyApp.Account.saveAccount(usernameCont.text, passCont.text);
@@ -160,6 +164,8 @@ class LoginPageState extends State<StatefulWidget>{
         }
       });
     }else if (val == "Multiple Accounts"){
+      MyApp.analytics.logLogin(loginMethod: "ParentAccount");
+      MyApp.analytics.setUserProperty(name: "AccountType", value: "ParentAccount");
       setState(() {
         isloading=false;
         MyApp.Account.saveAccount(usernameCont.text, passCont.text);
@@ -193,8 +199,9 @@ class LoginPageState extends State<StatefulWidget>{
   }
 
   void Login(){
-    FocusScope.of(context).requestFocus(FocusNode());
-    if(_formKey.currentState.validate()) {
+    if (context != null)
+      FocusScope.of(context).requestFocus(FocusNode());
+    if(_formKey.currentState != null && _formKey.currentState.validate()) {
       setState(() {
         isloading = true;
       });
@@ -202,6 +209,27 @@ class LoginPageState extends State<StatefulWidget>{
     }else{
       _autovalidate = true;
     }
+  }
+
+  @override
+  void didPush() {
+    MyApp.analytics.setCurrentScreen(screenName: "Login Page", screenClassOverride: "LoginPage");
+  }
+
+  @override
+  void didPopNext() {
+    MyApp.analytics.setCurrentScreen(screenName: "Login Page", screenClassOverride: "LoginPage");
+  }
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyApp.observer.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    MyApp.observer.unsubscribe(this);
+    super.dispose();
   }
 
 }

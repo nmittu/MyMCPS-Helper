@@ -6,7 +6,6 @@ import 'package:firebase_admob/firebase_admob.dart';
 
 abstract class AppStateHandler extends State<StatefulWidget> with WidgetsBindingObserver{
   static var _timeOfClose;
-  BuildContext context;
   BannerAd banner;
 
   void initState() {

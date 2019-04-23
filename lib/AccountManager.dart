@@ -36,7 +36,7 @@ class AccountManager{
 
   Future<String> Login(String StudentId, String Password) async {
     try {
-      final result = await InternetAddress.lookup('google.com');
+      final result = await InternetAddress.lookup('example.com');
       if (!(result.isNotEmpty && result[0].rawAddress.isNotEmpty)) {
         return "Cannot connect to internet";
       }

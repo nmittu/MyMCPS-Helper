@@ -32,7 +32,7 @@ class ClassesPage extends StatefulWidget{
 
 }
 
-class ClassesPageState extends AppStateHandler{
+class ClassesPageState extends AppStateHandler with RouteAware{
   var _isloading = true;
   List<dynamic> _classes;
   String title;
@@ -45,6 +45,7 @@ class ClassesPageState extends AppStateHandler{
 
   initState(){
     super.initState();
+    //MyApp.analytics.setCurrentScreen(screenName: "Classes Page", screenClassOverride: "ClassesPage");
   }
 
   Future<List<dynamic>> loadWithName(String name) async{
@@ -86,7 +87,7 @@ class ClassesPageState extends AppStateHandler{
 
   @override
   Widget build(BuildContext context) {
-    this.context = context;
+    //this.context = context;
     // TODO: implement build
     return WillPopScope(onWillPop: () async {
       return canPop;
@@ -118,6 +119,7 @@ class ClassesPageState extends AppStateHandler{
                     )
                   ),
                   InkWell(child: ListTile(leading: Icon(Icons.arrow_back), title: Text("Logout")), onTap: (){
+                    MyApp.analytics.logEvent(name: "Logout");
                     MyApp.Account.deleteAccount();
                     MyApp.Account.logout();
                     canPop = true;
@@ -133,6 +135,7 @@ class ClassesPageState extends AppStateHandler{
                     Navigator.pop(context);
                   },),
                   InkWell(child: ListTile(leading: Icon(Icons.style),title: Text("Theme"),), onTap: (){
+                    MyApp.analytics.logEvent(name: "ChangeTheme");
                     showDialog(
                         context: context,
                         builder: (context){
@@ -159,6 +162,8 @@ class ClassesPageState extends AppStateHandler{
               ),
             ),
             InkWell(child: ListTile(leading: Icon(Icons.brightness_4),title: Text("Dark Mode")), onTap: (){
+              MyApp.analytics.logEvent(name: "SetDarkMode", parameters: {"value":Theme.of(context).brightness==Brightness.light});
+              MyApp.analytics.setUserProperty(name: "DarkMode", value: (Theme.of(context).brightness==Brightness.light).toString());
               if(Theme.of(context).brightness == Brightness.light) {
                 MyApp.themeColor = null;
                 SharedPreferences.getInstance().then((pref){
@@ -200,6 +205,27 @@ class ClassesPageState extends AppStateHandler{
           )))
       ),
     );
+  }
+
+  @override
+  void didPush() {
+    MyApp.analytics.setCurrentScreen(screenName: "Classes Page", screenClassOverride: "ClassesPage");
+  }
+
+  @override
+  void didPopNext() {
+    MyApp.analytics.setCurrentScreen(screenName: "Classes Page", screenClassOverride: "ClassesPage");
+  }
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyApp.observer.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    MyApp.observer.unsubscribe(this);
+    super.dispose();
   }
 
 }
