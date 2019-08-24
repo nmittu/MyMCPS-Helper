@@ -64,7 +64,7 @@ class LoginPageState extends State<StatefulWidget> with RouteAware{
     banner
         ..load()
         ..show();
-    //MyApp.analytics.setCurrentScreen(screenName: "Login Page", screenClassOverride: "LoginPage");
+    MyApp.analytics.setCurrentScreen(screenName: "Login Page", screenClassOverride: "LoginPage");
   }
 
   @override

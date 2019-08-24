@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
       ),
       themedWidgetBuilder: (context, theme){
         return MaterialApp(
-          //debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
           title: 'MyMCPS Helper',
           theme: theme,
           home: LoginPage(),

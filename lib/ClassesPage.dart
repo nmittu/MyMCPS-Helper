@@ -61,6 +61,9 @@ class ClassesPageState extends AppStateHandler with RouteAware{
   double calculateGPA(){
     if(_classes == null)
       return 0;
+    if(_classes.length == 0){
+      return 0;
+    }
     return _classes.map((dynamic c) => GradeUtils.getGradeGPA(c.percent)).reduce((a,b)=>a+b)/_classes.length;
   }
 
@@ -189,7 +192,7 @@ class ClassesPageState extends AppStateHandler with RouteAware{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(_classes[index].courseName, style: TextStyle(fontSize: 20),),
-                          Text( _classes[index].teacher + " PD: " + _classes[index].period + " RM: " + _classes[index].room, overflow: TextOverflow.ellipsis,)
+                          //Text( _classes[index].teacher + " PD: " + _classes[index].period + " RM: " + _classes[index].room, overflow: TextOverflow.ellipsis,)
                         ],
                       )),
                       Container(
