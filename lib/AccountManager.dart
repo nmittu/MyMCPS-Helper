@@ -28,6 +28,8 @@ class AccountManager{
   var dio;
   var cookieJar;
 
+  var isTestAccount = false;
+
   AccountManager(){
     dio= new Dio();
     cookieJar = CookieJar();
@@ -35,6 +37,11 @@ class AccountManager{
   }
 
   Future<String> Login(String StudentId, String Password) async {
+    if (StudentId == "test@example.com" && Password == "Test123"){
+      isTestAccount = true;
+      return "true";
+    }
+
     try {
       final result = await InternetAddress.lookup('example.com');
       if (!(result.isNotEmpty && result[0].rawAddress.isNotEmpty)) {
@@ -129,18 +136,42 @@ class AccountManager{
   }
 
   Future<List<dynamic>> loadClasses() async {
+    if(isTestAccount){
+      return [new Class(courseName: "Course1",
+                        overallgrade: "A",
+                        period: "01",
+                        sectionid: "01",
+                        termid: "MP1",
+                        percent: "100",
+                        teacher: "Teacher Name",
+                        room: "1")];
+    }
+
     var url = ClassesBaseURL + "?schoolid=" + currentSchool() + "&student_number=" + StudentId + "&studentId=" + StudentNumber;
     String json = (await dio.get(url)).data.toString();
     return (jsonDecode(json).map((var model)=>Class.fromJson(model)).toList());
   }
 
   Future<Class> loadClassDetails(String secid) async{
+    if(isTestAccount){
+      return new Class(courseName: "Course1",
+          overallgrade: "A",
+          period: "01",
+          sectionid: "01",
+          termid: "MP1",
+          percent: "100",
+          teacher: "Teacher Name",
+          room: "1");
+    }
     String url = ClassDetailURL + "?secid=" + secid + "&schoolid=" + currentSchool() + "&student_number=" + StudentId + "&termid=" + await loadTerm();
     String json = (await dio.get(url)).data.toString();
     return Class.fromJson(jsonDecode(json));
   }
 
   Future<String> loadTerm() async{
+    if (isTestAccount){
+      return "MP1";
+    }
     if (this.termname != null){
       return this.termname;
     }
@@ -164,12 +195,36 @@ class AccountManager{
   }
 
   Future<List<dynamic>> loadCategories(String secid) async{
+    if (isTestAccount){
+      return [
+        new GradingCategory(
+          Description: "Category",
+          PointsEarned: "90",
+          PointsPossible: "100",
+          Weight: "1"
+        )
+      ];
+    }
+
     String url = CategoryURL + "?secid=" + secid + "&student_number=" + StudentId + "&schoolid=" + currentSchool() + "&termid=" + await loadTerm();
     String json = (await dio.get(url)).data.toString();
     return (jsonDecode(json).map((var model)=>GradingCategory.fromJson(model)).toList());
   }
 
   Future<List<dynamic>> loadAssignments(String secid) async{
+    if (isTestAccount){
+      return [
+        new Assignment(
+          AssignmentType: "Category",
+          Description: "Test Assignment",
+          Grade: "A",
+          Points: "10",
+          Possible: "10",
+          Percent: "100"
+        )
+      ];
+    }
+
     String url = AssignmentInfoURL + "?secid=" + secid + "&student_number=" + StudentId + "&schoolid=" + currentSchool() + "&termid=" + await loadTerm();
     String json = (await dio.get(url)).data.toString();
     return (jsonDecode(json).map((var model)=>Assignment.fromJson(model)).toList());
