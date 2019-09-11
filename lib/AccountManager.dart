@@ -165,7 +165,11 @@ class AccountManager{
     }
     String url = ClassDetailURL + "?secid=" + secid + "&schoolid=" + currentSchool() + "&student_number=" + StudentId + "&termid=" + await loadTerm();
     String json = (await dio.get(url)).data.toString();
-    return Class.fromJson(jsonDecode(json));
+    try {
+      return Class.fromJson(jsonDecode(json));
+    }catch(FormatException){
+      return null;
+    }
   }
 
   Future<String> loadTerm() async{
@@ -184,10 +188,13 @@ class AccountManager{
     String termname = "";
 
     for(var term in terms){
-      if(term["termname"] != null && int.parse(term["termname"].substring(2)) > max){
-        max = int.parse(term["termname"].substring(2));
-        termname = term["termname"];
-      }
+      try {
+        if (term["code"] != null &&
+            int.parse(term["code"].substring(2)) > max) {
+          max = int.parse(term["code"].substring(2));
+          termname = term["code"];
+        }
+      }catch(FormatException){}
     }
 
     this.termname = termname;
