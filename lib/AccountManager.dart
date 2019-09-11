@@ -20,7 +20,6 @@ class AccountManager{
   static const AssignmentInfoURL = "https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json";
   static const ClassDetailURL = "https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CourseDetail.json";
 
-  var StudentNumber = "";
   var StudentId = "";
   var password;
   var termname = null;
@@ -95,13 +94,7 @@ class AccountManager{
       }
     }
     if(int.tryParse(StudentId) != null){
-      String body = resp.data.toString();
-
-      var pattern = new RegExp("\\s?root.studentId\\s?=\\s?parseInt\\(('|\")(\\d+)('|\")\\);");
-
-      var match = pattern.firstMatch(body);
-      if (match != null) {
-        StudentNumber = match.group(2);
+      if (!resp.data.toString().contains("input type=\"password\"")) {
         return "true";
       }
     }else{
@@ -117,7 +110,6 @@ class AccountManager{
         }
         return "Multiple Accounts";
       }
-
     }
 
     return "Login failed!";
@@ -147,7 +139,7 @@ class AccountManager{
                         room: "1")];
     }
 
-    var url = ClassesBaseURL + "?schoolid=" + currentSchool() + "&student_number=" + StudentId + "&studentId=" + StudentNumber;
+    var url = ClassesBaseURL + "?schoolid=" + currentSchool() + "&student_number=" + StudentId;
     String json = (await dio.get(url)).data.toString();
     return (jsonDecode(json).map((var model)=>Class.fromJson(model)).toList());
   }
@@ -264,29 +256,6 @@ class AccountManager{
   }
 
   Future setActiveAccount(String name) async {
-    Map<String, String> form = new Map();
-    form["selected_student_id"] = accounts[name];
-    var resp;
-    try {
-      resp = await dio.post(LoginURL, data: form,
-          options: new Options(contentType: ContentType.parse(
-              "application/x-www-form-urlencoded")));
-    }on DioError catch(error) {
-      if (error.response.statusCode == 302) {
-        resp = await dio.get(error.response.headers.value("location"));
-      }
-    }
-    
-    {
-      String body = resp.data.toString();
-      
-      var pattern = new RegExp("\\s?root.studentNumber\\s?=\\s?parseInt\\(('|\")(\\d+)('|\")\\);");
-      var match = pattern.firstMatch(body);
-
-      if(match != null){
-        StudentId = match.group(2);
-      }
-    }
-    StudentNumber = accounts[name];
+    StudentId = accounts[name];
   }
 }
